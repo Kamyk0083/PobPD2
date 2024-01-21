@@ -7,9 +7,10 @@ import java.util.Scanner;
 public class Kalkulator {
 
     public void oblicz(String plikWejsciowy, String plikWyjsciowy) {
+        PrintWriter writer = null;
         try {
+            writer = new PrintWriter(plikWyjsciowy);
             File dane = new File(plikWejsciowy);
-            PrintWriter writer = new PrintWriter(plikWyjsciowy);
             Scanner scanner = new Scanner(dane);
 
             while (scanner.hasNextLine()) {
@@ -44,10 +45,16 @@ public class Kalkulator {
             }
 
             scanner.close();
-            writer.close();
-
         } catch (FileNotFoundException e) {
-            System.out.println("Nie znaleziono pliku: " + plikWejsciowy);
+            if (writer != null) {
+                writer.println("Nie znaleziono pliku: " + plikWejsciowy);
+            } else {
+                System.out.println("Nie można utworzyć pliku wyjściowego: " + plikWyjsciowy);
+            }
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
         }
     }
 }
